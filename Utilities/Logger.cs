@@ -35,8 +35,8 @@ namespace iSpyApplication.Utilities
 
             try
             {
-                string em = ex.HelpLink + "<br/>" + ex.Message + "<br/>" + ex.Source + "<br/>" + ex.StackTrace +
-                            "<br/>" + ex.InnerException + "<br/>" + ex.Data;
+                string em = ex.HelpLink + "<br/>" + ex.Message + "<br/>" + ex.Source + "<br/>" + ex.StackTrace.Replace(Environment.NewLine, Environment.NewLine + "<br/>" +
+                            "<br/>" + ex.InnerException + "<br/>" + ex.Data);
                 _logFile.Append("<tr><td style=\"color:red\" valign=\"top\">Exception:</td><td valign=\"top\">" +
                                DateTime.Now.ToLongTimeString() + "</td><td valign=\"top\">" + em + "</td></tr>");
             }
@@ -146,8 +146,11 @@ namespace iSpyApplication.Utilities
                     }
                     if (_lastlog.Length != _logFile.Length)
                     {
-                        string logTemplate = "<html><head><title>iSpy v" + Application.ProductVersion + " Log File</title><style type=\"text/css\">body,td,th,div {font-family:Verdana;font-size:10px}</style></head><body><h1>" + MainForm.Conf.ServerName + ": Log Start (v" + Application.
-                                                                                                          ProductVersion + " Platform: " + Program.Platform + "): " + _logStartDateTime + "</h1><p><table cellpadding=\"2px\"><!--CONTENT--></table></p></body></html>";
+                        string logTemplate =
+                            "<html><head><title>iSpy v" + Application.ProductVersion + " Log File</title><style type=\"text/css\">body,td,th,div {font-family:Verdana;font-size:10px}</style>" +
+                            @"<meta HTTP-EQUIV=""Content-Type"" CONTENT=""text/html; charset=utf8""></head><body><h1>" + MainForm.Conf.ServerName +
+                            ": Log Start (v" + Application.ProductVersion + " Platform: " + Program.Platform + "): " + _logStartDateTime +
+                            "</h1><p><table cellpadding=\"2px\"><!--CONTENT--></table></p></body></html>";
                         string fc = logTemplate.Replace("<!--CONTENT-->", _logFile.ToString());
                         File.WriteAllText(Program.AppDataPath + @"log_" + NextLog + ".htm", fc);
                         _lastlog = _logFile.ToString();
